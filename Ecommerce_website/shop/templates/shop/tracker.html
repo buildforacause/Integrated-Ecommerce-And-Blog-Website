@@ -1,0 +1,94 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} Tracker{% endblock %}
+
+{% block body %}
+<div class="container">
+  <main>
+    <div class="py-5 text-center">
+      <h2>Ecommerce - Tracker</h2>
+      <p class="lead">Please Enter your Order id and email address to track the
+      status of your order!</p>
+    </div>
+        <!-- Form starts here -->
+      <div class="container">
+        <form class="needs-validation" novalidate method="post" action="/shop/tracker/">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-12">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" name="email" id="email" placeholder="you@example.com" required>
+              <div class="invalid-feedback">
+                Please enter a valid email address.
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <label for="order_id" class="form-label">Order Id</label>
+              <input type="number" class="form-control" name="order_id" id="order_id" placeholder="" required>
+              <div class="invalid-feedback">
+                Order Id required.
+              </div>
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <button class="w-100 btn btn-secondary btn-lg" type="submit">Track Your Order</button>
+        </form>
+      </div>
+      <hr class="my-4">
+      <div class="container">
+        <ul class="list-group mb-3" id="updates">
+          {% if not thank %}
+          {% for i in item %}
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+             <div>
+               <h6 class="my-0">{{ i.update }}</h6>
+             </div><span class="text-muted">{{ i.time }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+        <h5>Order Details</h5>
+        {% endif %}
+        <ul class="list-group mb-3" id="details">
+          {% for key, value in order.items %}
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+             <div>
+               <h6 class="my-0">Product: {{ value.1 }}</h6>
+             </div><span class="text-muted">Qty: {{ value.0 }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+        {% if thank %}
+        <h5>The email address and Order id does not match!</h5>
+        {% endif %}
+      </div>
+  </main>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+
+</script>
+{% endblock %}

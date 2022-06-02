@@ -1,0 +1,142 @@
+{% extends 'shop/basic.html' %}
+{% block title %}{{ cat }}{% endblock %}
+
+{% block style %}
+      .slider {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .swiper-container {
+      padding-bottom: 30px;
+      }
+
+      .swiper-scrollbar {
+        background: #d6d6d6;
+      }
+
+      .swiper-container-horizontal > .swiper-scrollbar {
+        border-radius: 2px;
+        height: 5px;
+        width: 200px;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+{% endblock %}
+{% block nav %}
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Sort By
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+            <li><button class="dropdown-item" >Price: Low to High</button></li>
+            <li><button class="dropdown-item" >Price: High to Low</button></li>
+          </ul>
+{% endblock %}
+{% block body %}
+  <div class="container marketing my-4">
+<div class="row my-5">
+   {% for obj in products %}
+   <h1 class="customh1">{{ obj.0.subcategory }}</h1>
+<div class="slider">
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+              {% for e in obj %}
+              <div class="swiper-slide">
+                  <div class="col-lg-8">
+                  <img src="/media/{{ e.image }}" class="d-block" width="140" height="140" alt="{{e.product_name}}">
+                  <h2 class="fw-normal" id="namepr{{e.id}}">{{ e.product_name }}</h2>
+                      <p class="text-muted">₹<span class="prices" id="pricepr{{e.id}}">{{ e.price }}</span></p>
+                  <p>{{ e.desc| slice:"0:50" }}...</p>
+                  <p><a class="btn btn-secondary" href="/shop/productview/{{ e.id }}">Browse »</a><span class="divpr" id="divpr{{e.id}}"><button id="pr{{ e.id }}" class="cart btn btn-outline-secondary mx-3">Add to Cart »</button></span></p>
+                </div>
+              </div>
+          {% endfor %}
+        </div>
+    <!-- pagination -->
+    <div class="swiper-pagination"></div>
+
+    <!-- scrollbar -->
+    <div class="swiper-scrollbar"></div>
+
+  </div>
+</div>
+    <hr class="featurette-divider">
+    {% endfor %}
+
+  </div>
+  </div>
+
+  {% endblock %}
+
+{% block js %}
+<script>
+    var prods = [];
+    prices = document.getElementsByClassName("prices");
+    for(var i=0;i<prices.length;i++){
+        prods.push(prices[i].innerHTML);
+    }
+    console.log(prods);
+    Array.prototype.orderBy = function(selector, desc = false) {
+  return [...this].sort((a, b) => {
+    a = selector(a);
+    b = selector(b);
+    if (a === b) return 0;
+    return (desc ? a > b : a < b) ? -1 : 1;
+  });
+};
+</script>
+{% endblock %}
+
+

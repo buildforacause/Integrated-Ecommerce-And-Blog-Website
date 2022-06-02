@@ -1,0 +1,68 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} {{ product.product_name }} {% endblock %}
+
+{% block body %}
+<div class="container my-4">
+    <div class="row">
+    <div class="col-md-4">
+    <div class="row">
+       <img src="/media/{{product.image}}" width="233px" height="385px" class="my-5">
+    </div>
+        </div>
+    <div class="col-md-8 my-5">
+        <h4 id="namepr{{product.id}}">{{ product.product_name }}</h4>
+        <p>Price: ₹<span class="text-muted" id="pricepr{{product.id}}">{{ product.price }}</span></p>
+        <p>{{ product.desc }}</p>
+        <p><button id="buypr{{ product.id }}" class="buy btn btn-secondary">Buy Now »</button><span class="divpr" id="divpr{{product.id}}"><button id="pr{{ product.id }}" class="cart btn btn-outline-secondary mx-3">Add to Cart »</button></span></p>
+    </div>
+        </div>
+    <hr class="featurette-divider">
+    <div class="row my-5">
+   <h1>Showing Recommended Products for {{ recommended.0.category }}</h1>
+<div class="slider">
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+              {% for e in recommended %}
+        {% if not e.id == product.id %}
+              <div class="swiper-slide">
+                  <div class="col-lg-8">
+                  <img src="/media/{{ e.image }}" class="d-block" width="140" height="140" alt="{{e.product_name}}">
+                  <h2 class="fw-normal">{{ e.product_name }}</h2>
+                    <p class="text-muted">₹{{ e.price }}</p>
+                  <p>{{ e.desc| slice:"0:50" }}...</p>
+                  <p><a class="btn btn-secondary" href="/shop/productview/{{ e.id }}">Browse »</a></p>
+                </div>
+              </div>
+        {% endif %}
+          {% endfor %}
+        </div>
+    <!-- pagination -->
+    <div class="swiper-pagination"></div>
+
+    <!-- scrollbar -->
+    <div class="swiper-scrollbar"></div>
+
+  </div>
+</div>
+    <hr class="featurette-divider">
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $('.buy').on("click", function (){
+        var idstr = this.id.slice(3, );
+        if (cart[idstr] === undefined) {
+            qty = 1;
+            name = document.getElementById('name' + idstr).innerHTML;
+            price = document.getElementById('price' + idstr).innerHTML;
+            cart[idstr] = [qty, name, price];
+        }
+    updateCart(cart);
+        document.location = '/shop/checkout';
+    });
+</script>
+
+{% endblock %}
